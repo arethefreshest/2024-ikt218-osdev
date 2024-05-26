@@ -73,9 +73,10 @@ add_executable(uiaos-kernel
 	src/descriptor_table.asm
 	src/monitor.c	
 	src/common.c
-
-
+	src/libc/stdio.c
+    src/libc/string.c
 )
+
 
 # Include directories for the kernel target
 target_include_directories(uiaos-kernel PUBLIC include)
