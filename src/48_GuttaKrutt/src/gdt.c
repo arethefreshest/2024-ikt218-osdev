@@ -19,7 +19,7 @@ void init_gdt() {
   gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF); // Data segment
   gdt_set_gate(3, 0, 0xFFFFFFFF, 0xFA, 0xCF); // User mode code segment
   gdt_set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF); // User mode data segment
-  gdt_set_gate(5, (uint32_t)&tss, sizeof(tss) - 1, 0x89, 0x00); // Task state segment (TSS) if needed
+  //gdt_set_gate(5, (uint32_t)&tss, sizeof(tss) - 1, 0x89, 0x00); // Task state segment (TSS) if needed
 
   // Load the GDT
   gdt_flush((uint32_t)&gdt_ptr);

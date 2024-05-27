@@ -47,14 +47,14 @@ static void scroll()
         // Move the current text chunk that makes up the screen
         // back in the buffer by a line
         int i;
-        for (i = 0*80; i < 24 * VGA_WIDTH; i++)
+        for (i = 0*80; i < 24*80; i++)
         {
-            terminal_buffer[i] = terminal_buffer[i + VGA_WIDTH];
+            terminal_buffer[i] = terminal_buffer[i+80];
         }
 
         // The last line should now be blank. Do this by writing
         // 80 spaces to it.
-        for (i = 24 * VGA_WIDTH; i < 25 * VGA_WIDTH; i++)
+        for (i = 24*80; i < 25*80; i++)
         {
     
             terminal_buffer[i] = blank;
