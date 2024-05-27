@@ -4,7 +4,6 @@
 
 #include "monitor.h"
 #include "libc/system.h"
-#include "common.h"
 
 enum vga_color {
 	VGA_COLOR_BLACK = 0,
@@ -48,14 +47,14 @@ static void scroll()
         // Move the current text chunk that makes up the screen
         // back in the buffer by a line
         int i;
-        for (i = 0*80; i < 24*80; i++)
+        for (i = 0*80; i < 24 * VGA_WIDTH; i++)
         {
-            terminal_buffer[i] = terminal_buffer[i+80];
+            terminal_buffer[i] = terminal_buffer[i + VGA_WIDTH];
         }
 
         // The last line should now be blank. Do this by writing
         // 80 spaces to it.
-        for (i = 24*80; i < 25*80; i++)
+        for (i = 24 * VGA_WIDTH; i < 25 * VGA_WIDTH; i++)
         {
     
             terminal_buffer[i] = blank;
@@ -71,7 +70,7 @@ static void scroll()
 static void move_cursor()
 {
     // The screen is 80 characters wide...
-    uint16_t pos = terminal_row * 80 + terminal_column;
+    uint16_t pos = terminal_row * VGA_WIDTH + terminal_column;
 
 	outb(0x3D4, 0x0F);
 	outb(0x3D5, (uint8_t) (pos & 0xFF));
@@ -117,7 +116,6 @@ void monitor_putentryat(char c, uint8_t color, size_t x, size_t y)
 
 
 
- 
 void _monitor_put(char c) 
 {
 	// Deal with special character behavior
@@ -149,7 +147,7 @@ void monitor_put(char c)
     // Move the hardware cursor.
     move_cursor();
 }
- 
+
 void monitor_write(const char* data, size_t size) 
 {
 	for (size_t i = 0; i < size; i++)
@@ -165,6 +163,7 @@ void monitor_writestring(const char* data)
 {
 	monitor_write(data, strlen(data));
 }
+
 
 
 
@@ -194,11 +193,20 @@ void monitor_clear()
 void monitor_write_hex(uint32_t n)
 {
     int32_t tmp;
-    char* item = "0x";
+    char* prefix = "0x";
 
-    monitor_write(item, strlen(item));
+    monitor_write(prefix, strlen(prefix));
 
-    char noZeroes = 1;
+    char buffer[9];
+    buffer[8] = '\0';
+    for (int i = 7; i >= 0; i--) {
+        int digit = n & 0xF;
+        buffer[i] = (digit < 10) ? '0' + digit : 'a' + (digit - 10);
+        n >>= 4;
+    }
+    monitor_write(buffer, 8);
+
+    /*char noZeroes = 1;
 
     int i;
     for (i = 28; i > 0; i -= 4)
@@ -229,7 +237,7 @@ void monitor_write_hex(uint32_t n)
     else
     {
         monitor_put (tmp+'0');
-    }
+    }*/
 
 }
 
@@ -242,6 +250,20 @@ void monitor_write_dec(uint32_t n)
         return;
     }
 
+    char buffer[10];
+    int i = 0;
+    while (n > 0)
+    {
+        buffer[i++] = '0' + n % 10;
+        n /= 10;
+    }
+    
+    for (int j = i - 1; j >= 0; j--)
+    {
+        monitor_put(buffer[j]);
+    }
+    
+    /*
     int32_t acc = n;
     char c[32];
     int i = 0;
@@ -261,6 +283,7 @@ void monitor_write_dec(uint32_t n)
         c2[i--] = c[j++];
     }
     monitor_write(c2, strlen(c2));
-
+    */
+    
 }
 

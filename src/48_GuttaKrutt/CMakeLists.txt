@@ -58,23 +58,38 @@ set(OS_KERNEL_LINKER "${CMAKE_CURRENT_SOURCE_DIR}/src/arch/${OS_ARCH_TARGET}/lin
 
 # Add executable target for the kernel
 add_executable(uiaos-kernel 
+
 	src/multiboot2.asm
 	src/descriptor_table.asm
 	src/kernel.c
 	src/kernel.cpp
 	src/gdt.c
+	# src/idt.c
+	# src/isr.c
+	# src/irq.c
+	# src/isr_asm.asm
 
-	# src/multiboot2.asm # TODO: Add multiboot2 support
-    src/kernel.c
-	src/kernel.cpp
-
-	#Her kan man sette inn flere filer som skal kompileres
-	src/gdt.c
-	src/descriptor_table.asm
+	# Her kan man sette inn flere filer som skal kompileres
 	src/monitor.c	
 	src/common.c
+
+	# Stdlib
 	src/libc/stdio.c
     src/libc/string.c
+	# src/libc/panic.c
+	# src/libc/system.c
+
+	# Memory
+	# src/memory/paging.c
+	# src/memory/malloc.c
+	# src/memory/memutils.c
+	# src/pit.c
+
+	# Keyboard
+	# src/input.c
+
+	# Applications
+	# src/apps/song/song.c
 )
 
 
@@ -96,14 +111,14 @@ target_link_options(uiaos-kernel PUBLIC
 )
 
 
-target_link_options(
+#[[target_link_options(
 	uiaos-kernel
 	PUBLIC "-ffreestanding"
 	PUBLIC "-nostdlib"
 	PUBLIC "-static"
 	PUBLIC "-pie"
 	PUBLIC "-T${OS_KERNEL_LINKER}"
-)
+)]] # Ikke i løsning -- Finn ut hvorfor 
 
 
 # Set properties for the kernel target

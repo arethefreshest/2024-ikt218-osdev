@@ -27,6 +27,10 @@ struct gdt_ptr_t {
 void init_gdt();
 void gdt_set_gate(int32_t num, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran);
 
+// External declarations for the assembly functions
+extern void gdt_flush(uint32_t gdt_ptr);
+// extern void idt_flush(uint32_t idt_ptr);
+
 static struct gdt_entry_t gdt[GDT_ENTRIES];
 static struct gdt_ptr_t gdt_ptr;
 

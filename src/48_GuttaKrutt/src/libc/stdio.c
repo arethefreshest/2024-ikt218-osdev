@@ -18,7 +18,9 @@ bool print(const char* data, size_t length) {
 			return false;
 	return true;
 }
- int printf(const char* __restrict__ format, ...) {
+
+
+int printf(const char* __restrict__ format, ...) {
     // TODO %d and alot of formatting is missing!
     // This you can implement yourtself!
 	va_list parameters;
