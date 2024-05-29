@@ -11,13 +11,12 @@ void init_idt() {
     idt_ptr.base = (uint32_t) &idt;
 
     // Initialize all IDT entries to the default interrupt handler 
-    for (int i = 0; i < IDT_ENTRIES) {
+    for (int i = 0; i < IDT_ENTRIES; i++) {
         idt[i].base_low = 0x0000;
         idt[i].base_high = 0x0000;
         idt[i].selector = 0x08; // Kernel code segment offset
         idt[i].zero = 0x00;
         idt[i].type_attr = 0x8E; // Interrupt gate present
-
         int_handlers[i].handler = NULL;
     }
 
@@ -35,7 +34,7 @@ void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t type_attr) {
     idt[num].base_low = base & 0xFFFF;
     idt[num].base_high = (base >> 16) & 0xFFFF;
 
-    idt[num].selector = sel
+    idt[num].selector = sel;
     idt[num].zero = 0x00;
     idt[num].type_attr = type_attr | 0x50; // DPL to allow user mode access
 }
