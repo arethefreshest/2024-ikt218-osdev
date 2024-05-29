@@ -1,15 +1,14 @@
 #include "libc/stdint.h"
 #include "libc/stddef.h"
 #include "libc/stdbool.h"
-#include <multiboot2.h>
 #include "libc/system.h"
+#include <multiboot2.h>
 #include "descriptor_tables.h"  // Inkluderer header file for gdt filen
 #include "common.h"
 #include "monitor.h"
-
+#include "interrupts.h"
 /*
 #include "pit.h"
-#include "interrupts.h"
 #include memory/memory.h"
 */
 
@@ -35,13 +34,16 @@ monitor_initialize();
 //Initialiserer gdt man lagde tidligere
 init_gdt();
 
-/*
 // Initialiserer interrupt descriptor table (IDT)
 init_idt();
 
 // Initialiserer hardware interrupts
 init_irq();
 
+// Initialize the keyboard
+init_keyboard();
+
+/*
 // Initialiserer kernelens minne manager ved å gi den en adresse til hvor kernelen slutter
 init_kernel_memory(&end);
 

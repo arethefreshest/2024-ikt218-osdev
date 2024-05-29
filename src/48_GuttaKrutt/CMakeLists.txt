@@ -64,10 +64,12 @@ add_executable(uiaos-kernel
 	src/kernel.c
 	src/kernel.cpp
 	src/gdt.c
-	# src/idt.c
-	# src/isr.c
-	# src/irq.c
-	# src/isr_asm.asm
+	src/idt.c
+	src/isr.c
+	src/irq.c
+	src/isr_asm.asm
+	src/input.c
+	src/keyboard.c
 
 	# Her kan man sette inn flere filer som skal kompileres
 	src/monitor.c	
