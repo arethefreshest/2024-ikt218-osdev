@@ -14,6 +14,9 @@ void isr_handler(registers_t regs) {
     if (intrpt.handler != 0) {
         intrpt.handler(&regs, intrpt.data);
     } else {
+        /*monitor_write("Unhandled interrupt: ");
+        monitor_write_hex(int_no);
+        monitor_put('\n');*/
         for(;;); // Infinite loop if no handler is registered
     }
     

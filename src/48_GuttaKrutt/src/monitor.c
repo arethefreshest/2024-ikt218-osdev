@@ -193,20 +193,11 @@ void monitor_clear()
 void monitor_write_hex(uint32_t n)
 {
     int32_t tmp;
-    char* prefix = "0x";
+    char* item = "0x";
 
-    monitor_write(prefix, strlen(prefix));
+    monitor_write(item, strlen(item));
 
-    char buffer[9];
-    buffer[8] = '\0';
-    for (int i = 7; i >= 0; i--) {
-        int digit = n & 0xF;
-        buffer[i] = (digit < 10) ? '0' + digit : 'a' + (digit - 10);
-        n >>= 4;
-    }
-    monitor_write(buffer, 8);
-
-    /*char noZeroes = 1;
+    char noZeroes = 1;
 
     int i;
     for (i = 28; i > 0; i -= 4)
@@ -228,7 +219,7 @@ void monitor_write_hex(uint32_t n)
             monitor_put( tmp+'0' );
         }
     }
-  
+
     tmp = n & 0xF;
     if (tmp >= 0xA)
     {
@@ -237,8 +228,16 @@ void monitor_write_hex(uint32_t n)
     else
     {
         monitor_put (tmp+'0');
-    }*/
+    }
 
+    char buffer[9];
+    buffer[8] = '\0';
+    for (int i = 7; i >= 0; i--) {
+        int digit = n & 0xF;
+        buffer[i] = (digit < 10) ? '0' + digit : 'a' + (digit - 10);
+        n >>= 4;
+    }
+    monitor_write(buffer, 8);
 }
 
 void monitor_write_dec(uint32_t n)
@@ -250,20 +249,6 @@ void monitor_write_dec(uint32_t n)
         return;
     }
 
-    char buffer[10];
-    int i = 0;
-    while (n > 0)
-    {
-        buffer[i++] = '0' + n % 10;
-        n /= 10;
-    }
-    
-    for (int j = i - 1; j >= 0; j--)
-    {
-        monitor_put(buffer[j]);
-    }
-    
-    /*
     int32_t acc = n;
     char c[32];
     int i = 0;
@@ -283,7 +268,6 @@ void monitor_write_dec(uint32_t n)
         c2[i--] = c[j++];
     }
     monitor_write(c2, strlen(c2));
-    */
     
 }
 

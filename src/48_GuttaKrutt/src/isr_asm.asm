@@ -1,9 +1,3 @@
-[bits 32] ; 32 bit code 
-[extern isr_handler] ; external function to handle the interrupt
-[extern irq_handler]
-
-section .text
-
 ; Common ISR stub which does NOT pass its own error code
 %macro ISR_NOERRCODE 1
     global isr%1
@@ -19,17 +13,18 @@ section .text
 %macro ISR_ERRCODE 1
     global isr%1
     isr%1:
-        ;cli
-        push %1
-        jmp isr_common_stub
+      ;cli
+      push %1
+      jmp isr_common_stub
 %endmacro
 
 %macro IRQ 2
     global irq%1
     irq%1:
-        push byte 0
-        push byte %2
-        jmp irq_common_stub
+      ;cli
+      push byte 0
+      push byte %2
+      jmp irq_common_stub
 %endmacro
 
 ISR_NOERRCODE 0
@@ -82,6 +77,9 @@ IRQ   13,   45
 IRQ   14,   46
 IRQ   15,   47
 
+; In isr.c
+extern isr_handler
+
 isr_common_stub:
     pusha
 
@@ -106,6 +104,9 @@ isr_common_stub:
     add esp, 8
     sti
     iret
+
+; In isr.c
+extern irq_handler
 
 irq_common_stub:
     pusha

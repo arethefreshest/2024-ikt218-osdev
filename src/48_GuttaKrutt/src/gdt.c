@@ -1,10 +1,6 @@
 #include "descriptor_tables.h"
 
 
-// GDT and GDT pointer
-static struct gdt_entry_t gdt[GDT_ENTRIES];
-static struct gdt_ptr_t gdt_ptr;
-
 // Assembly function to load the GDT
 extern void gdt_flush(uint32_t gdt_ptr);
 

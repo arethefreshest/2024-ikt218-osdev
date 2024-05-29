@@ -1,55 +1,15 @@
 
 extern "C"{
     #include "libc/system.h"
-    // #include "memory/memory.h"
     #include "common.h"
-    // #include "interrupts.h"
-    // #include "input.h"
-    // #include "song/song.h"
+    #include "interrupts.h"
+    #include "input.h"
 }
-
-/*
-// Existing global operators new overloads for C++.
-void* operator new(size_t size){
-    return malloc(size);
-}
-
-void* operator new[](size_t size){
-    return malloc(size);
-}
-
-// Existing global operators delete overloads for C++.
-void operator delete(void* p) noexcept{
-    free(p);
-}
-
-void operator delete[](void* p) noexcept{
-    free(p);
-}
-
-// Add-sized deallocation functions for C++.
-void operator delete(void* p, size_t size) noexcept{
-    (void)size; // size is not needed for deallocation, added to match the signature.
-    free(p);
-}
-
-void operator delete[](void* p, size_t size) noexcept{
-    (void)size; // size is not needed for deallocation, added to match the signature.
-    free(p);
-}
-
-SongPlayer* create_song_player(){
-    auto* player = new SongPlayer();
-    player->play_song = play_song_impl;
-    return player;
-}
-
-*/
 
 extern "C" int kernel_main(void);
 int kernel_main(){
 
-    /*
+    
     // Set up interrupt handlers
     register_interrupt_handler(3, [](registers_t* regs, void* context) {
         printf("Interrupt 3 - OK\n");
@@ -100,31 +60,6 @@ int kernel_main(){
         // Acknowledge the IRQ
         asm volatile("cli");
     }, NULL);
-
-    // Define songs
-    Song* songs[] = {
-        new Song({battlefield_1942_theme, sizeof(battlefield_1942_theme) / sizeof(Note)}),
-        new Song({tetris_theme, sizeof(tetris_theme) / sizeof(Note)}),
-        new Song({mii_theme, sizeof(mii_theme) / sizeof(Note)}),
-        new Song({megalovania, sizeof(megalovania) / sizeof(Note)}),
-        new Song({mario_bros, sizeof(mario_bros) / sizeof(Note)}),
-        new Song({mario_underworld, sizeof(mario_underworld) / sizeof(Note)}),
-        new Song({mario_star, sizeof(mario_star) / sizeof(Note)}),
-        new Song({mario_death, sizeof(mario_death) / sizeof(Note)}),
-    };
-
-    // Number of songs
-    uint32_t n_songs = sizeof(songs) / sizeof(Song*);
-
-    // Create a song player and play each song
-    SongPlayer* player = create_song_player();
-    for (uint32_t i = 0; i < n_songs; i++)
-    {
-        printf("Playing song %d\n", i);
-        player->play_song(songs[i]);
-        printf("Song %d done\n", i);
-    }
-    */
 
     // Main loop
     printf("Kernel main loop\n");

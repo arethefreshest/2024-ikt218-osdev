@@ -28,8 +28,8 @@ void irq_handler(registers_t regs) {
     outb(0x20, 0x20); // Send reset signal to master.
 
     // Call the IRQ handler
-    struct int_handler_t irq = irq_handlers[regs.int_no - 32];
-    if (irq.handler != 0) {
-        irq.handler(&regs, irq.data);
+    struct int_handler_t intrpt = irq_handlers[regs.int_no];
+    if (intrpt.handler != 0) {
+        intrpt.handler(&regs, intrpt.data);
     }
 }

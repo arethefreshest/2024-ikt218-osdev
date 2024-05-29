@@ -69,7 +69,6 @@ add_executable(uiaos-kernel
 	src/irq.c
 	src/isr_asm.asm
 	src/input.c
-	src/keyboard.c
 
 	# Her kan man sette inn flere filer som skal kompileres
 	src/monitor.c	
@@ -78,20 +77,9 @@ add_executable(uiaos-kernel
 	# Stdlib
 	src/libc/stdio.c
     src/libc/string.c
-	# src/libc/panic.c
-	# src/libc/system.c
-
-	# Memory
-	# src/memory/paging.c
-	# src/memory/malloc.c
-	# src/memory/memutils.c
-	# src/pit.c
 
 	# Keyboard
-	# src/input.c
-
-	# Applications
-	# src/apps/song/song.c
+	src/input.c
 )
 
 
@@ -126,7 +114,6 @@ target_link_options(uiaos-kernel PUBLIC
 # Set properties for the kernel target
 set_target_properties(uiaos-kernel PROPERTIES
     OUTPUT_NAME "${OS_KERNEL_BINARY}"
-    #LINK_FLAGS "${OS_KERNEL_LINK_FLAGS}"
 )
 
 ########################################

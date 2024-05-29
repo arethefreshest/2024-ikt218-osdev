@@ -1,5 +1,4 @@
 #include "descriptor_tables.h"
-#include "libc/stdint.h"
 #include "interrupts.h"
 #include "common.h"
 
@@ -16,7 +15,8 @@ void init_idt() {
         idt[i].base_high = 0x0000;
         idt[i].selector = 0x08; // Kernel code segment offset
         idt[i].zero = 0x00;
-        idt[i].type_attr = 0x8E; // Interrupt gate present
+        idt[i].flags = 0x8E; // Interrupt gate present
+        
         int_handlers[i].handler = NULL;
     }
 
@@ -30,13 +30,13 @@ void idt_load() {
     asm volatile("lidt (%0)" : : "r" (&idt_ptr));
 }
 
-void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t type_attr) {
+void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags) {
     idt[num].base_low = base & 0xFFFF;
     idt[num].base_high = (base >> 16) & 0xFFFF;
 
     idt[num].selector = sel;
     idt[num].zero = 0x00;
-    idt[num].type_attr = type_attr | 0x50; // DPL to allow user mode access
+    idt[num].flags = flags | 0x60; // DPL to allow user mode access
 }
 
 void init_interrupts() {

@@ -7,11 +7,6 @@
 #include "common.h"
 #include "monitor.h"
 #include "interrupts.h"
-/*
-#include "pit.h"
-#include memory/memory.h"
-*/
-
 
 
 struct multiboot_info {
@@ -24,6 +19,10 @@ int kernel_main();
 
 // End of the kernel image, defined elsewhere.
 extern uint32_t end;
+
+void isr_test_handler(registers_t* regs, void* ctx) {
+    printf("Interrupt: %d\n", regs->int_no);
+}
 
 int main(uint32_t magic, struct multiboot_info* mb_info_addr) {
 
@@ -39,24 +38,6 @@ init_idt();
 
 // Initialiserer hardware interrupts
 init_irq();
-
-// Initialize the keyboard
-init_keyboard();
-
-/*
-// Initialiserer kernelens minne manager ved å gi den en adresse til hvor kernelen slutter
-init_kernel_memory(&end);
-
-// Initialiserer paging for minnehåndtering
-init_paging();
-
-// Printer informasjon om minne
-print_memory_layout();
-
-// Initialiserer PIT (Programmable Interval Timer)
-init_pit();
-*/
-
 
 printf("Hello World\n"); // Printer ut Hello World
 

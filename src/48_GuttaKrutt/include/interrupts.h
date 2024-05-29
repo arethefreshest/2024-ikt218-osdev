@@ -54,12 +54,12 @@
 #define IRQ_COUNT 16
 
 // ISR and IRQ handlers
-extern void isr0();
-extern void isr1();
-extern void isr2();
-extern void isr3();
-extern void isr4();
-extern void isr5();
+extern void isr0 ();
+extern void isr1 ();
+extern void isr2 ();
+extern void isr3 ();
+extern void isr4 ();
+extern void isr5 ();
 extern void isr6 ();
 extern void isr7 ();
 extern void isr8 ();
@@ -110,6 +110,7 @@ void init_irq();
 // Register the interrupts
 void init_interrupts();
 
+// Struct to hold register values pushed by the processor
 typedef struct registers
 {
     uint32_t ds;                  // Data segment selector
@@ -135,5 +136,7 @@ void register_interrupt_handler(uint8_t, isr_t handler, void*);
 
 static struct int_handler_t int_handlers[IDT_ENTRIES];
 static struct int_handler_t irq_handlers[IRQ_COUNT];
+
+#define IRQ_COUNT 16
 
 #endif // INTERRUPTS_H
