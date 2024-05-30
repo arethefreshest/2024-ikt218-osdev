@@ -1,18 +1,14 @@
 
 extern "C"{
     #include "libc/system.h"
+    #include "memory/memory.h"
     #include "common.h"
     #include "interrupts.h"
     #include "input.h"
     #include "song/song.h"
 }
 
-SongPlayer* create_song_player() {
-    auto* player = new SongPlayer();
-    player->play_song = play_song_impl;
-    return player;
-    #include "memory/memory.h"
-}
+
 
 // Existing global operator new overloads
 void* operator new(size_t size) {
@@ -36,6 +32,13 @@ void operator delete(void* ptr, size_t size) noexcept {
 void operator delete[](void* ptr, size_t size) noexcept {
  (void)size; // Size parameter is unused, added to match required signature
  free(ptr);
+}
+
+SongPlayer* create_song_player() {
+    auto* player = new SongPlayer();
+    player->play_song = play_song_impl;
+    return player;
+    #include "memory/memory.h"
 }
 
 extern "C" int kernel_main(void);
@@ -94,7 +97,7 @@ int kernel_main(){
     }, NULL);
 
  Song* songs[] = {
-
+/*
         new Song({battlefield_1942_theme, sizeof(battlefield_1942_theme) / sizeof(Note)}),
         new Song({starwars_theme, sizeof(starwars_theme) / sizeof(Note)}),
         new Song({music_1, sizeof(music_1) / sizeof(Note)}),    
@@ -103,6 +106,8 @@ int kernel_main(){
         new Song({music_4, sizeof(music_4) / sizeof(Note)}),
         new Song({music_3, sizeof(music_3) / sizeof(Note)}),
         new Song({music_2, sizeof(music_2) / sizeof(Note)})
+        */
+       new Song({bbl, sizeof(bbl) / sizeof(Note)}),
     };
     uint32_t n_songs = sizeof(songs) / sizeof(Song*);
 

@@ -88,6 +88,9 @@ add_executable(uiaos-kernel
 
 	# Keyboard
 	src/input.c
+
+	# Apps
+	src/apps/song/song.c
 )
 
 
