@@ -4,6 +4,31 @@ extern "C"{
     #include "common.h"
     #include "interrupts.h"
     #include "input.h"
+    #include "memory/memory.h"
+}
+
+// Existing global operator new overloads
+void* operator new(size_t size) {
+ return malloc(size);
+}
+void* operator new[](size_t size) {
+ return malloc(size);
+}
+// Existing global operator delete overloads
+void operator delete(void* ptr) noexcept {
+ free(ptr);
+}
+void operator delete[](void* ptr) noexcept {
+ free(ptr);
+}
+// Add sized-deallocation functions
+void operator delete(void* ptr, size_t size) noexcept {
+ (void)size; // Size parameter is unused, added to match required signature
+ free(ptr);
+}
+void operator delete[](void* ptr, size_t size) noexcept {
+ (void)size; // Size parameter is unused, added to match required signature
+ free(ptr);
 }
 
 extern "C" int kernel_main(void);

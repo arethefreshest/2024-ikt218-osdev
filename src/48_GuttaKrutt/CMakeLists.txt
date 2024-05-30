@@ -70,6 +70,12 @@ add_executable(uiaos-kernel
 	src/isr_asm.asm
 	src/input.c
 
+	# DETTE ER NYTT I ASSIGNMENT 4
+	src/memory/malloc.c
+	src/memory/paging.c
+	src/memory/memutils.c
+	src/pit.c
+
 	# Her kan man sette inn flere filer som skal kompileres
 	src/monitor.c	
 	src/common.c
@@ -77,6 +83,8 @@ add_executable(uiaos-kernel
 	# Stdlib
 	src/libc/stdio.c
     src/libc/string.c
+	src/libc/panic.c
+	src/libc/system.c
 
 	# Keyboard
 	src/input.c
