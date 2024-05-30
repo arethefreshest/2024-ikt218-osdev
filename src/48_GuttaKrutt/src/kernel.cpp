@@ -4,6 +4,7 @@ extern "C"{
     #include "common.h"
     #include "interrupts.h"
     #include "input.h"
+    #include "song/song.h"
 }
 
 SongPlayer* create_song_player() {
