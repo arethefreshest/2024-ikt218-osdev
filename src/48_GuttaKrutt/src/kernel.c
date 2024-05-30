@@ -7,6 +7,8 @@
 #include "common.h"
 #include "monitor.h"
 #include "interrupts.h"
+#include "memory/memory.h"
+#include "pit.h"
 
 
 struct multiboot_info {
@@ -38,6 +40,17 @@ init_idt();
 
 // Initialiserer hardware interrupts
 init_irq();
+
+// Initialize the kernel's memory manager using the end address of the kernel.
+init_kernel_memory(&end);
+
+// Initialize paging for memory management.
+init_paging();
+
+// Print memory information.
+print_memory_layout();
+
+init_pit();
 
 printf("Hello World\n"); // Printer ut Hello World
 
