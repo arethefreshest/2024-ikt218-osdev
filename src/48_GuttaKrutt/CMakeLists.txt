@@ -37,14 +37,19 @@ set(OS_KERNEL_IMAGE "kernel.iso")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_C_STANDARD 99)
 
+# Add the following lines to ensure the include paths are set correctly
+include_directories(/usr/include/c++/11)
+include_directories(/usr/include/x86_64-linux-gnu/c++/11)
+include_directories(/usr/include)
+
 ########################################
 # Assembly Configuration
 ########################################
 set(CMAKE_ASM_NASM_SOURCE_FILE_EXTENSIONS "s;S;asm")
 if(OS_ARCH_TARGET STREQUAL "i386")
-	set(CMAKE_ASM_NASM_OBJECT_FORMAT "elf32")
+    set(CMAKE_ASM_NASM_OBJECT_FORMAT "elf32")
 elseif(OS_ARCH_TARGET STREQUAL "x86_64")
-	set(CMAKE_ASM_NASM_OBJECT_FORMAT "elf64")
+    set(CMAKE_ASM_NASM_OBJECT_FORMAT "elf64")
 endif()
 
 # Command to compile NASM files
@@ -59,44 +64,42 @@ set(OS_KERNEL_LINKER "${CMAKE_CURRENT_SOURCE_DIR}/src/arch/${OS_ARCH_TARGET}/lin
 # Add executable target for the kernel
 add_executable(uiaos-kernel 
 
-	src/multiboot2.asm
-	src/descriptor_table.asm
-	src/kernel.c
-	src/kernel.cpp
-	src/gdt.c
-	src/idt.c
-	src/isr.c
-	src/irq.c
-	src/isr_asm.asm
-	src/input.c
+    src/multiboot2.asm
+    src/descriptor_table.asm
+    src/kernel.c
+    src/kernel.cpp
+    src/gdt.c
+    src/idt.c
+    src/isr.c
+    src/irq.c
+    src/isr_asm.asm
+    src/input.c
 
-	# DETTE ER NYTT I ASSIGNMENT 4
-	src/memory/malloc.c
-	src/memory/paging.c
-	src/memory/memutils.c
-	src/pit.c
+    # DETTE ER NYTT I ASSIGNMENT 4
+    src/memory/malloc.c
+    src/memory/paging.c
+    src/memory/memutils.c
+    src/pit.c
 
-	# Her kan man sette inn flere filer som skal kompileres
-	src/monitor.c	
-	src/common.c
+    # Her kan man sette inn flere filer som skal kompileres
+    src/monitor.c    
+    src/common.c
 
-	# Stdlib
-	src/libc/stdio.c
+    # Stdlib
+    src/libc/stdio.c
     src/libc/string.c
-	src/libc/panic.c
-	src/libc/system.c
+    src/libc/panic.c
+    src/libc/system.c
 
-	# Keyboard
-	src/input.c
+    # Keyboard
+    src/input.c
 
-	# Apps
-	src/apps/song/song.c
+    # Apps
+    src/apps/song/song.c
 )
-
 
 # Include directories for the kernel target
 target_include_directories(uiaos-kernel PUBLIC include)
-
 
 # Specify compile options for C and C++
 target_compile_options(uiaos-kernel PRIVATE
@@ -105,22 +108,10 @@ target_compile_options(uiaos-kernel PRIVATE
     $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:-m32 -march=i386 -Wno-unused-variable -Wno-unused-parameter>
 )
 
-
 # Specify link options for C and C++
 target_link_options(uiaos-kernel PUBLIC
     $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:-ffreestanding -nostdlib -fno-builtin -static -pie -O0 -T${OS_KERNEL_LINKER} -g>
 )
-
-
-#[[target_link_options(
-	uiaos-kernel
-	PUBLIC "-ffreestanding"
-	PUBLIC "-nostdlib"
-	PUBLIC "-static"
-	PUBLIC "-pie"
-	PUBLIC "-T${OS_KERNEL_LINKER}"
-)]] # Ikke i løsning -- Finn ut hvorfor 
-
 
 # Set properties for the kernel target
 set_target_properties(uiaos-kernel PROPERTIES
@@ -147,22 +138,22 @@ set(ISO_DIR ${CMAKE_CURRENT_BINARY_DIR}/iso)
 set(LIMINE_CONFIG_DIR ${CMAKE_SOURCE_DIR})
 set(LIMINE_DIR /usr/local/limine)
 add_custom_target(
-	uiaos-create-image
-	COMMAND rm -rf ${ISO_DIR}
-	COMMAND mkdir -p ${ISO_DIR}
-	COMMAND cp -v $<TARGET_FILE:uiaos-kernel> 
-	 	${LIMINE_CONFIG_DIR}/limine.cfg ${LIMINE_DIR}/limine-bios.sys ${LIMINE_DIR}/limine-bios-cd.bin
-		${LIMINE_DIR}/limine-uefi-cd.bin ${ISO_DIR}/
-	COMMAND mkdir -p ${ISO_DIR}/EFI/BOOT
-	COMMAND cp -v ${LIMINE_DIR}/BOOTX64.EFI ${ISO_DIR}/EFI/BOOT/
-	COMMAND cp -v ${LIMINE_DIR}/BOOTIA32.EFI ${ISO_DIR}/EFI/BOOT/
-	COMMAND xorriso -as mkisofs -b limine-bios-cd.bin
-	 	-no-emul-boot -boot-load-size 4 -boot-info-table
-	 	--efi-boot limine-uefi-cd.bin
-	 	-efi-boot-part --efi-boot-image --protective-msdos-label
-	 	${ISO_DIR} -o ${CMAKE_CURRENT_BINARY_DIR}/kernel.iso
-	COMMAND ${LIMINE_DIR}/limine bios-install ${CMAKE_CURRENT_BINARY_DIR}/kernel.iso
-	#COMMAND sudo rm -rf ${ISO_DIR}
-	DEPENDS create-fat32-disk uiaos-kernel
-	VERBATIM
+    uiaos-create-image
+    COMMAND rm -rf ${ISO_DIR}
+    COMMAND mkdir -p ${ISO_DIR}
+    COMMAND cp -v $<TARGET_FILE:uiaos-kernel> 
+        ${LIMINE_CONFIG_DIR}/limine.cfg ${LIMINE_DIR}/limine-bios.sys ${LIMINE_DIR}/limine-bios-cd.bin
+        ${LIMINE_DIR}/limine-uefi-cd.bin ${ISO_DIR}/
+    COMMAND mkdir -p ${ISO_DIR}/EFI/BOOT
+    COMMAND cp -v ${LIMINE_DIR}/BOOTX64.EFI ${ISO_DIR}/EFI/BOOT/
+    COMMAND cp -v ${LIMINE_DIR}/BOOTIA32.EFI ${ISO_DIR}/EFI/BOOT/
+    COMMAND xorriso -as mkisofs -b limine-bios-cd.bin
+        -no-emul-boot -boot-load-size 4 -boot-info-table
+        --efi-boot limine-uefi-cd.bin
+        -efi-boot-part --efi-boot-image --protective-msdos-label
+        ${ISO_DIR} -o ${CMAKE_CURRENT_BINARY_DIR}/kernel.iso
+    COMMAND ${LIMINE_DIR}/limine bios-install ${CMAKE_CURRENT_BINARY_DIR}/kernel.iso
+    #COMMAND sudo rm -rf ${ISO_DIR}
+    DEPENDS create-fat32-disk uiaos-kernel
+    VERBATIM
 )
